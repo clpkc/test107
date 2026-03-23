@@ -1,50 +1,100 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: N/A (template) -> 1.0.0
+- Modified principles:
+	- Principle 1 template slot -> I. Single-Feature Scope
+	- Principle 2 template slot -> II. Session-Only Location Privacy
+	- Principle 3 template slot -> III. Responsible OpenRice Access
+	- Principle 4 template slot -> IV. Testable Core Selection Logic
+	- Principle 5 template slot -> V. Complete Result Display with Safe Fallbacks
+- Added sections:
+	- Operational Constraints
+	- Development Workflow and Quality Gates
+- Removed sections:
+	- None
+- Templates requiring updates:
+	- .specify/templates/plan-template.md: ✅ reviewed, no required change
+	- .specify/templates/spec-template.md: ✅ reviewed, no required change
+	- .specify/templates/tasks-template.md: ✅ reviewed, no required change
+	- .specify/templates/commands/*.md: ⚠ path not present in this scaffold
+	- .github/agents/*.md: ✅ reviewed for compatibility, no required change
+- Deferred TODOs:
+	- None
+-->
+
+# Lunch Picker Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Single-Feature Scope
+The product scope for v1 MUST remain one user action: pressing a single button
+labeled "Pick a Restaurant" to receive exactly one restaurant result.
+Any flow that introduces multi-step ranking, list browsing, account features,
+or recommendation history is out of scope unless this constitution is amended.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Session-Only Location Privacy
+Location data MUST be used only for the active session to compute proximity.
+The system MUST NOT persist precise coordinates in databases, files, analytics,
+or logs. If telemetry is required, it MUST be coarse, non-identifying, and not
+reconstructable to exact user position.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Responsible OpenRice Access
+For v1, OpenRice web pages are the source of restaurant data; no public API is
+assumed. The implementation MUST minimize requests, cache responses where safe,
+and apply rate limits. Bulk crawling, aggressive scraping, or behavior that may
+interfere with site operation is prohibited.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Testable Core Selection Logic
+Core decision logic MUST be unit-testable in isolation from network and UI.
+At minimum, tests MUST cover:
+- Distance filtering at $\leq 1000m$ boundary behavior.
+- Deduplication rules for repeated restaurant entries.
+- Random selection behavior with deterministic test controls (e.g., seeded RNG
+	or injectable random provider).
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Complete Result Display with Safe Fallbacks
+After a pick, the UI MUST display: name, location/address, cuisine, price
+range, and photos. If any field is missing from source data, the UI MUST render
+"Not available" for that field rather than leaving blank or failing.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Operational Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Data source policy: OpenRice pages only for v1.
+- Network etiquette: request minimization, bounded retries, and explicit rate
+	limiting are mandatory.
+- Caching policy: cache fetched responses to reduce duplicate requests while
+	respecting freshness and legal constraints.
+- Logging policy: logs MUST exclude precise coordinates and raw payloads that
+	can reveal exact location.
+- Failure policy: partial source data MUST degrade gracefully using
+	"Not available" placeholders.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Development Workflow and Quality Gates
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- Constitution gate for planning: each plan MUST explicitly prove compliance
+	with single-feature scope, privacy constraints, and access etiquette.
+- Testing gate for implementation: unit tests for distance filter, dedupe, and
+	random pick MUST pass before merge.
+- UX gate for acceptance: a successful pick MUST show all required fields or
+	"Not available" fallbacks.
+- Compliance gate for data access: changes touching scraping/fetching MUST
+	include evidence of rate limiting and cache behavior.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution overrides conflicting local conventions for this project.
+Amendments require:
+1. A documented proposal describing the change and rationale.
+2. Explicit impact review on privacy, compliance, and testability.
+3. Updates to affected templates or agent guidance when needed.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Versioning policy:
+- MAJOR: incompatible principle removals/redefinitions.
+- MINOR: new principle or materially expanded governance.
+- PATCH: clarifications that do not change policy meaning.
+
+Compliance review expectations:
+- Every PR MUST include a constitution compliance check.
+- Reviewers MUST block merges that violate non-negotiable principles.
+
+**Version**: 1.0.0 | **Ratified**: 2026-03-23 | **Last Amended**: 2026-03-23
