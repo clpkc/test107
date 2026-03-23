@@ -11,6 +11,7 @@ export function HomePage(): JSX.Element {
   const [error, setError] = useState<string>("");
   const [retryable, setRetryable] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [debug, setDebug] = useState<string>("");
 
   async function resolveLocation(): Promise<{ lat: number; lng: number }> {
     if (manualLocation) return manualLocation;
@@ -27,12 +28,17 @@ export function HomePage(): JSX.Element {
     setError("");
     setRetryable(false);
     setLoading(true);
+    setDebug("Loading...");
     try {
       const location = await resolveLocation();
+      setDebug(`Got location: ${location.lat}, ${location.lng}`);
       const picked = await pickRestaurant(location.lat, location.lng, 1000);
       setResult(picked);
+      setDebug("");
     } catch (err) {
       const message = String((err as Error).message || "");
+      setDebug(`Error: ${message}`);
+      console.error("Pick error:", err);
       if (message.includes("location_denied")) {
         setManualMode(true);
         setError("Location denied. Enter a manual location.");
@@ -66,6 +72,7 @@ export function HomePage(): JSX.Element {
         />
       ) : null}
       <PickButton onClick={() => void onPick()} disabled={loading} />
+      {debug ? <p style={{ color: "#666", fontSize: "0.9em" }}>{debug}</p> : null}
       {error ? <p role="alert">{error}</p> : null}
       {retryable ? (
         <button type="button" onClick={() => void onPick()} disabled={loading}>
