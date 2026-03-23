@@ -226,3 +226,16 @@ Task: "T024 backend/src/services/coordinateResolver.ts"
 - [P] markers indicate no direct file-level dependency conflicts.
 - US-labeled tasks map directly to prioritized user stories.
 - Suggested MVP scope: Phase 3 (US1) after foundational work.
+
+---
+
+## Phase 7: Post-Analysis Gap Closure Tasks
+
+**Purpose**: Close analysis-identified test coverage gaps without altering existing task sequencing.
+
+- [ ] T049 [P] Add unit test to verify retries on 429/5xx never exceed per-click attempt cap in backend/tests/unit/retryPerClickCap.test.ts
+- [ ] T050 [P] Add unit test to verify retries never bypass global rate limiter in backend/tests/unit/retryRateLimiterInteraction.test.ts
+- [ ] T051 [P] Add integration test where upstream returns 429 then 200 and assert total upstream requests stay within caps and limiter rules in backend/tests/integration/pickRoute.retryLimiterCaps.test.ts
+- [ ] T052 [P] Add frontend unit/UI test asserting primary button text equals exactly "Pick a Restaurant" in frontend/tests/unit/pickButtonLabel.test.tsx
+- [ ] T053 [P] Add unit test for cache key normalization to ensure equivalent request inputs resolve to one cache key in backend/tests/unit/cacheKeyNormalization.test.ts
+- [ ] T054 [P] Add unit/integration test for cache TTL behavior to verify before-TTL uses cache and after-TTL triggers refresh in backend/tests/integration/cacheTtlRefresh.test.ts
