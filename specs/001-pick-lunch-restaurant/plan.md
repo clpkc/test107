@@ -14,7 +14,7 @@ primary button labeled `Pick a Restaurant` and a result card. Server design incl
 ## Technical Context
 
 **Language/Version**: TypeScript 5.x on Node.js 20 LTS  
-**Primary Dependencies**: Express (or Fastify), Cheerio, Zod, pino, Vitest, Supertest, node-cache (or Redis adapter-ready cache wrapper)  
+**Primary Dependencies**: Express, Cheerio, Zod, pino, Vitest, Supertest, node-cache (or Redis adapter-ready cache wrapper)  
 **Storage**: In-memory cache for v1; no persistent DB required  
 **Testing**: Vitest + coverage, plus endpoint integration tests with Supertest  
 **Target Platform**: Linux container/server with modern evergreen browsers
@@ -78,13 +78,19 @@ backend/
 │   │   └── restaurant.ts
 │   └── app.ts
 └── tests/
+  ├── contract/
+  │   └── pickApi.contract.test.ts
     ├── unit/
     │   ├── distanceService.test.ts
     │   ├── radiusFilter.test.ts
     │   ├── dedupeService.test.ts
     │   └── randomService.test.ts
     └── integration/
-        └── pickRoute.test.ts
+    ├── pickRoute.success.test.ts
+    ├── pickRoute.manualFallback.test.ts
+    ├── pickRoute.noResults.test.ts
+    ├── pickRoute.sourceUnavailable.test.ts
+    └── pickRoute.parsingFailure.test.ts
 
 frontend/
 ├── src/
@@ -102,6 +108,7 @@ frontend/
 
 **Structure Decision**: Option 2 (web application) selected to keep parsing and source
 protection server-side while keeping UI minimal and focused.
+Contract tests validate the `/api/pick` request/response schema and error-code behavior.
 
 ## Phase 0: Research Output Summary
 
