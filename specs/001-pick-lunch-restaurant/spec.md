@@ -5,6 +5,26 @@
 **Status**: Draft  
 **Input**: User description: "Build a small app that helps me pick a lunch restaurant near my current location with minimal effort."
 
+## Clarifications
+
+### Session 2026-03-23
+
+- Q: Where do coordinates come from for OpenRice data? -> A: Extract coordinates from
+	OpenRice page metadata first (JSON-LD, map links, data attributes), then fallback
+	to geocoding parsed address; candidates without coordinates are excluded from
+	radius filtering.
+- Q: What is the per-click request budget and anti-abuse policy? -> A: Hard cap of
+	3 OpenRice origin requests per "Pick a Restaurant" click, with page cache TTL,
+	rate limiting, and bounded retries.
+- Q: What are field extraction and fallback rules? -> A: Each required display field
+	has explicit source selectors and MUST show "Not available" on missing values;
+	photos require at least 1 valid image URL.
+- Q: How are duplicates removed and randomness ensured? -> A: Deduplicate by canonical
+	OpenRice URL identity and choose uniformly from the eligible deduplicated pool.
+- Q: Which acceptance criteria are mandatory for release? -> A: Five explicit
+	Given/When/Then criteria: success path, permission-denied fallback, no-results in
+	1000m, source unavailable, and parsing failure.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - One-Tap Nearby Restaurant Pick (Priority: P1)
@@ -71,6 +91,10 @@ source unavailability, and parsing errors, then verifying clear error states.
 - A restaurant exactly 1000 meters away MUST be considered in range.
 - Duplicate restaurant entries from the source MUST be deduplicated before random
 	selection.
+- If a restaurant candidate has no resolvable coordinates after metadata extraction and
+	address geocoding fallback, it MUST be excluded from distance eligibility.
+- If all fetched candidates are excluded due to missing coordinates, the app MUST show
+	a "no restaurants within 1000m" style outcome with retry guidance.
 - If one or more display fields are missing from source data, each missing field MUST
 	render as "Not available".
 - If photos are missing, the photos area MUST display "Not available" instead of
@@ -105,6 +129,56 @@ source unavailability, and parsing errors, then verifying clear error states.
 	"Not available".
 - **FR-013**: The system MUST NOT persist precise user coordinates in storage,
 	telemetry, or logs.
+
+### Distance and Coordinate Resolution Rules
+
+- **DR-001**: Candidate restaurant coordinates MUST be extracted in this priority order:
+	page-embedded coordinates (for example JSON-LD or map parameters), then address
+	geocoding fallback.
+- **DR-002**: If no valid coordinates can be obtained for a candidate restaurant,
+	that candidate MUST be excluded from the 1000 meter radius pool.
+- **DR-003**: Distance filtering MUST use inclusive boundary logic where
+	distance <= 1000 meters is eligible.
+- **DR-004**: User-provided manual fallback location MUST be resolved to coordinates
+	for the same radius evaluation logic as device location.
+
+### Request Budget, Caching, Rate Limiting, and Retry
+
+- **RQ-001**: Each "Pick a Restaurant" click MUST trigger at most 3 OpenRice origin
+	page requests (cache hits do not count toward origin requests).
+- **RQ-002**: Page cache key MUST be the normalized request URL
+	(scheme + host + path + sorted query, without fragment).
+- **RQ-003**: Cached OpenRice page responses MUST use a TTL of 10 minutes.
+- **RQ-004**: The client/service MUST enforce rate limiting of at most 30 OpenRice
+	origin requests per minute, with a burst ceiling of 5 requests per 10 seconds.
+- **RQ-005**: Retry is allowed only for transient failures (HTTP 429, HTTP 5xx,
+	or network timeout) with at most 2 retries using exponential backoff and jitter.
+- **RQ-006**: Retry MUST NOT violate the per-click request cap or global rate limit.
+
+### Field Extraction and Fallback Rules
+
+- **FX-001**: Name source is the restaurant title text from listing/detail page;
+	if missing, display "Not available".
+- **FX-002**: Address source is the restaurant address text block;
+	if missing, display "Not available".
+- **FX-003**: Cuisine source is the cuisine/category labels;
+	if missing, display "Not available".
+- **FX-004**: Price range source is the displayed price indicator/text;
+	if missing, display "Not available".
+- **FX-005**: Photos source is restaurant image/gallery URLs; minimum photo rule is
+	at least 1 valid image URL to be considered available. If zero valid URLs exist,
+	display "Not available" for photos.
+
+### Deduplication and Random Selection Rules
+
+- **SL-001**: Restaurant identity for deduplication MUST use canonical OpenRice URL
+	(path normalized, query and fragment removed, trailing slash normalized).
+- **SL-002**: If canonical URL is unavailable, a fallback identity key of
+	normalized(name + address) MAY be used.
+- **SL-003**: Random selection MUST be uniform over the deduplicated eligible pool:
+	each eligible restaurant has probability 1/N where N is pool size.
+- **SL-004**: Randomizer behavior MUST support deterministic test control via
+	injectable seeded randomness.
 
 ### Assumptions and Dependencies
 
@@ -143,3 +217,27 @@ source unavailability, and parsing errors, then verifying clear error states.
 - **SC-005**: 100% of tested failure modes (location denied/no fallback,
 	no results in radius, source unavailable, parsing failure) show explicit and
 	actionable error states.
+
+## Acceptance Criteria (Clarified)
+
+1. **Given** location permission is granted and OpenRice source pages are reachable,
+	**When** the user presses "Pick a Restaurant", **Then** the app returns exactly one
+	randomly selected, deduplicated restaurant within inclusive 1000m and displays
+	name, address, cuisine, price range, and photos or "Not available" fallbacks.
+
+2. **Given** location permission is denied,
+	**When** the user provides a valid manual fallback location and presses
+	"Pick a Restaurant", **Then** the app returns exactly one eligible restaurant within
+	inclusive 1000m using the same filtering and display rules.
+
+3. **Given** location is available but no deduplicated candidates have distance <=1000m,
+	**When** the user presses "Pick a Restaurant", **Then** the app shows a clear
+	no-restaurants-within-1000m message and a retry action.
+
+4. **Given** OpenRice source pages are unavailable (for example timeout/429/5xx after
+	bounded retries), **When** the user presses "Pick a Restaurant", **Then** the app
+	shows a source-unavailable error message and does not persist precise coordinates.
+
+5. **Given** OpenRice page retrieval succeeds but parsing fails for required content,
+	**When** the user presses "Pick a Restaurant", **Then** the app shows a parsing
+	failure message with retry guidance and does not crash.
