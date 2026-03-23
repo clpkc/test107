@@ -26,12 +26,12 @@ description: "Task list for Lunch Restaurant Picker implementation"
 
 **Purpose**: Initialize monorepo web app structure and toolchain.
 
-- [ ] T001 Create web app directory structure in backend/src, backend/tests, frontend/src, and frontend/tests
-- [ ] T002 Initialize backend package and dependencies in backend/package.json (Express/Fastify, Cheerio, Zod, pino)
-- [ ] T003 [P] Initialize frontend package and dependencies in frontend/package.json
-- [ ] T004 [P] Configure TypeScript projects in backend/tsconfig.json and frontend/tsconfig.json
-- [ ] T005 [P] Configure lint/format scripts in backend/package.json and frontend/package.json
-- [ ] T006 Create baseline app entrypoints in backend/src/app.ts and frontend/src/main.tsx
+- [X] T001 Create web app directory structure in backend/src, backend/tests, frontend/src, and frontend/tests
+- [X] T002 Initialize backend package and dependencies in backend/package.json (Express, Cheerio, Zod, pino)
+- [X] T003 [P] Initialize frontend package and dependencies in frontend/package.json
+- [X] T004 [P] Configure TypeScript projects in backend/tsconfig.json and frontend/tsconfig.json
+- [X] T005 [P] Configure lint/format scripts in backend/package.json and frontend/package.json
+- [X] T006 Create baseline app entrypoints in backend/src/app.ts and frontend/src/main.tsx
 
 ---
 
@@ -41,16 +41,16 @@ description: "Task list for Lunch Restaurant Picker implementation"
 
 **⚠️ CRITICAL**: No user story implementation starts before this phase completes.
 
-- [ ] T007 Define shared backend types and API response schema in backend/src/models/restaurant.ts
-- [ ] T008 Define RestaurantProvider interface in backend/src/providers/RestaurantProvider.ts
-- [ ] T009 Implement cache service with TTL support in backend/src/services/cacheService.ts
-- [ ] T010 [P] Implement rate limiting service in backend/src/services/rateLimitService.ts
-- [ ] T011 [P] Implement retry utility with exponential backoff and jitter in backend/src/services/retryService.ts
-- [ ] T012 Implement distance calculation utility in backend/src/services/distanceService.ts
-- [ ] T013 [P] Implement dedupe utility by canonical URL in backend/src/services/dedupeService.ts
-- [ ] T014 [P] Implement uniform random selection utility with injectable RNG in backend/src/services/randomService.ts
-- [ ] T015 Configure API routing and error middleware in backend/src/api/router.ts
-- [ ] T016 Implement structured logging with coordinate redaction in backend/src/services/logger.ts
+- [X] T007 Define shared backend types and API response schema in backend/src/models/restaurant.ts
+- [X] T008 Define RestaurantProvider interface in backend/src/providers/RestaurantProvider.ts
+- [X] T009 Implement cache service with TTL support in backend/src/services/cacheService.ts
+- [X] T010 [P] Implement rate limiting service in backend/src/services/rateLimitService.ts
+- [X] T011 [P] Implement retry utility with exponential backoff and jitter in backend/src/services/retryService.ts
+- [X] T012 Implement distance calculation utility in backend/src/services/distanceService.ts
+- [X] T013 [P] Implement dedupe utility by canonical URL in backend/src/services/dedupeService.ts
+- [X] T014 [P] Implement uniform random selection utility with injectable RNG in backend/src/services/randomService.ts
+- [X] T015 Configure API routing and error middleware in backend/src/api/router.ts
+- [X] T016 Implement structured logging with coordinate redaction in backend/src/services/logger.ts
 
 **Checkpoint**: Foundation complete, user stories can proceed.
 
@@ -64,23 +64,23 @@ description: "Task list for Lunch Restaurant Picker implementation"
 
 ### Tests for User Story 1
 
-- [ ] T017 [P] [US1] Add unit tests for distance calculations in backend/tests/unit/distanceService.test.ts
-- [ ] T018 [P] [US1] Add unit tests for inclusive radius filtering (<=1000m) in backend/tests/unit/radiusFilter.test.ts
-- [ ] T019 [P] [US1] Add unit tests for canonical URL deduping in backend/tests/unit/dedupeService.test.ts
-- [ ] T020 [P] [US1] Add unit tests for uniform random selection with seeded RNG in backend/tests/unit/randomService.test.ts
-- [ ] T021 [P] [US1] Add API contract test for GET /api/pick in backend/tests/contract/pickApi.contract.test.ts
-- [ ] T022 [P] [US1] Add integration success-path test for pick flow in backend/tests/integration/pickRoute.success.test.ts
+- [X] T017 [P] [US1] Add unit tests for distance calculations in backend/tests/unit/distanceService.test.ts
+- [X] T018 [P] [US1] Add unit tests for inclusive radius filtering (<=1000m) in backend/tests/unit/radiusFilter.test.ts
+- [X] T019 [P] [US1] Add unit tests for canonical URL deduping in backend/tests/unit/dedupeService.test.ts
+- [X] T020 [P] [US1] Add unit tests for uniform random selection with seeded RNG in backend/tests/unit/randomService.test.ts
+- [X] T021 [P] [US1] Add API contract test for GET /api/pick in backend/tests/contract/pickApi.contract.test.ts
+- [X] T022 [P] [US1] Add integration success-path test for pick flow in backend/tests/integration/pickRoute.success.test.ts
 
 ### Implementation for User Story 1
 
-- [ ] T023 [US1] Implement OpenRice HTML parser for required fields in backend/src/parsers/openRiceParser.ts
-- [ ] T024 [US1] Implement coordinate extraction and fallback geocoding flow in backend/src/services/coordinateResolver.ts
-- [ ] T025 [US1] Implement OpenRice provider using parser + cache + limiter in backend/src/providers/OpenRiceRestaurantProvider.ts
-- [ ] T026 [US1] Implement pick orchestration service (fetch, dedupe, filter, select) in backend/src/services/pickService.ts
-- [ ] T027 [US1] Implement GET /api/pick endpoint in backend/src/api/pickRoute.ts
-- [ ] T028 [US1] Build single-page UI with primary button in frontend/src/pages/HomePage.tsx
-- [ ] T029 [US1] Implement frontend API client and result-card rendering in frontend/src/services/pickApiClient.ts and frontend/src/components/ResultCard.tsx
-- [ ] T030 [US1] Enforce fallback display values (`Not available`) in frontend/src/components/ResultCard.tsx
+- [X] T023 [US1] Implement OpenRice HTML parser for required fields in backend/src/parsers/openRiceParser.ts
+- [X] T024 [US1] Implement coordinate extraction and fallback geocoding flow in backend/src/services/coordinateResolver.ts
+- [X] T025 [US1] Implement OpenRice provider using parser + cache + limiter in backend/src/providers/OpenRiceRestaurantProvider.ts
+- [X] T026 [US1] Implement pick orchestration service (fetch, dedupe, filter, select) in backend/src/services/pickService.ts
+- [X] T027 [US1] Implement GET /api/pick endpoint in backend/src/api/pickRoute.ts
+- [X] T028 [US1] Build single-page UI with primary button in frontend/src/pages/HomePage.tsx
+- [X] T029 [US1] Implement frontend API client and result-card rendering in frontend/src/services/pickApiClient.ts and frontend/src/components/ResultCard.tsx
+- [X] T030 [US1] Enforce fallback display values (`Not available`) in frontend/src/components/ResultCard.tsx
 
 **Checkpoint**: US1 delivers MVP behavior and is independently testable.
 
@@ -94,15 +94,15 @@ description: "Task list for Lunch Restaurant Picker implementation"
 
 ### Tests for User Story 2
 
-- [ ] T031 [P] [US2] Add frontend unit tests for permission-denied fallback UI in frontend/tests/unit/locationFallback.test.tsx
-- [ ] T032 [P] [US2] Add integration test for manual location pick flow in backend/tests/integration/pickRoute.manualFallback.test.ts
+- [X] T031 [P] [US2] Add frontend unit tests for permission-denied fallback UI in frontend/tests/unit/locationFallback.test.tsx
+- [X] T032 [P] [US2] Add integration test for manual location pick flow in backend/tests/integration/pickRoute.manualFallback.test.ts
 
 ### Implementation for User Story 2
 
-- [ ] T033 [US2] Implement browser location-permission and fallback state handling in frontend/src/pages/HomePage.tsx
-- [ ] T034 [US2] Implement manual location input component in frontend/src/components/ManualLocationForm.tsx
-- [ ] T035 [US2] Validate manual lat/lng before API call in frontend/src/services/pickApiClient.ts
-- [ ] T036 [US2] Return clear 400 validation errors for invalid coordinates in backend/src/api/pickRoute.ts
+- [X] T033 [US2] Implement browser location-permission and fallback state handling in frontend/src/pages/HomePage.tsx
+- [X] T034 [US2] Implement manual location input component in frontend/src/components/ManualLocationForm.tsx
+- [X] T035 [US2] Validate manual lat/lng before API call in frontend/src/services/pickApiClient.ts
+- [X] T036 [US2] Return clear 400 validation errors for invalid coordinates in backend/src/api/pickRoute.ts
 
 **Checkpoint**: US2 works independently of US3.
 
@@ -116,16 +116,16 @@ description: "Task list for Lunch Restaurant Picker implementation"
 
 ### Tests for User Story 3
 
-- [ ] T037 [P] [US3] Add integration test for no-results-within-1000m in backend/tests/integration/pickRoute.noResults.test.ts
-- [ ] T038 [P] [US3] Add integration test for source-unavailable handling in backend/tests/integration/pickRoute.sourceUnavailable.test.ts
-- [ ] T039 [P] [US3] Add integration test for parsing-failure handling in backend/tests/integration/pickRoute.parsingFailure.test.ts
-- [ ] T040 [P] [US3] Add frontend unit tests for error-state rendering and retry actions in frontend/tests/unit/errorStates.test.tsx
+- [X] T037 [P] [US3] Add integration test for no-results-within-1000m in backend/tests/integration/pickRoute.noResults.test.ts
+- [X] T038 [P] [US3] Add integration test for source-unavailable handling in backend/tests/integration/pickRoute.sourceUnavailable.test.ts
+- [X] T039 [P] [US3] Add integration test for parsing-failure handling in backend/tests/integration/pickRoute.parsingFailure.test.ts
+- [X] T040 [P] [US3] Add frontend unit tests for error-state rendering and retry actions in frontend/tests/unit/errorStates.test.tsx
 
 ### Implementation for User Story 3
 
-- [ ] T041 [US3] Map backend failure modes to API error codes/messages in backend/src/api/pickRoute.ts
-- [ ] T042 [US3] Add no-results, source-unavailable, and parsing-failure UI states in frontend/src/pages/HomePage.tsx
-- [ ] T043 [US3] Implement retry action wiring for retriable errors in frontend/src/services/pickApiClient.ts and frontend/src/pages/HomePage.tsx
+- [X] T041 [US3] Map backend failure modes to API error codes/messages in backend/src/api/pickRoute.ts
+- [X] T042 [US3] Add no-results, source-unavailable, and parsing-failure UI states in frontend/src/pages/HomePage.tsx
+- [X] T043 [US3] Implement retry action wiring for retriable errors in frontend/src/services/pickApiClient.ts and frontend/src/pages/HomePage.tsx
 
 **Checkpoint**: All user stories independently functional and testable.
 
@@ -135,11 +135,11 @@ description: "Task list for Lunch Restaurant Picker implementation"
 
 **Purpose**: Final quality, compliance, and delivery checks.
 
-- [ ] T044 [P] Update API documentation to match contract in specs/001-pick-lunch-restaurant/contracts/pick-api.yaml and backend/src/api/pickRoute.ts
-- [ ] T045 [P] Add frontend accessibility pass for button/result card/fallback form in frontend/src/pages/HomePage.tsx
-- [ ] T046 Validate no precise coordinate persistence in backend/src/services/logger.ts and backend/src/services/cacheService.ts
-- [ ] T047 Run quickstart validation scenarios from specs/001-pick-lunch-restaurant/quickstart.md
-- [ ] T048 Run full test suite and coverage in backend/tests and frontend/tests
+- [X] T044 [P] Update API documentation to match contract in specs/001-pick-lunch-restaurant/contracts/pick-api.yaml and backend/src/api/pickRoute.ts
+- [X] T045 [P] Add frontend accessibility pass for button/result card/fallback form in frontend/src/pages/HomePage.tsx
+- [X] T046 Validate no precise coordinate persistence in backend/src/services/logger.ts and backend/src/services/cacheService.ts
+- [X] T047 Run quickstart validation scenarios from specs/001-pick-lunch-restaurant/quickstart.md
+- [X] T048 Run full test suite and coverage in backend/tests and frontend/tests
 
 ---
 
@@ -233,9 +233,9 @@ Task: "T024 backend/src/services/coordinateResolver.ts"
 
 **Purpose**: Close analysis-identified test coverage gaps without altering existing task sequencing.
 
-- [ ] T049 [P] Add unit test to verify retries on 429/5xx never exceed per-click attempt cap in backend/tests/unit/retryPerClickCap.test.ts
-- [ ] T050 [P] Add unit test to verify retries never bypass global rate limiter in backend/tests/unit/retryRateLimiterInteraction.test.ts
-- [ ] T051 [P] Add integration test where upstream returns 429 then 200 and assert total upstream requests stay within caps and limiter rules in backend/tests/integration/pickRoute.retryLimiterCaps.test.ts
-- [ ] T052 [P] Add frontend unit/UI test asserting primary button text equals exactly "Pick a Restaurant" in frontend/tests/unit/pickButtonLabel.test.tsx
-- [ ] T053 [P] Add unit test for cache key normalization to ensure equivalent request inputs resolve to one cache key in backend/tests/unit/cacheKeyNormalization.test.ts
-- [ ] T054 [P] Add unit/integration test for cache TTL behavior to verify before-TTL uses cache and after-TTL triggers refresh in backend/tests/integration/cacheTtlRefresh.test.ts
+- [X] T049 [P] Add unit test to verify retries on 429/5xx never exceed per-click attempt cap in backend/tests/unit/retryPerClickCap.test.ts
+- [X] T050 [P] Add unit test to verify retries never bypass global rate limiter in backend/tests/unit/retryRateLimiterInteraction.test.ts
+- [X] T051 [P] Add integration test where upstream returns 429 then 200 and assert total upstream requests stay within caps and limiter rules in backend/tests/integration/pickRoute.retryLimiterCaps.test.ts
+- [X] T052 [P] Add frontend unit/UI test asserting primary button text equals exactly "Pick a Restaurant" in frontend/tests/unit/pickButtonLabel.test.tsx
+- [X] T053 [P] Add unit test for cache key normalization to ensure equivalent request inputs resolve to one cache key in backend/tests/unit/cacheKeyNormalization.test.ts
+- [X] T054 [P] Add unit/integration test for cache TTL behavior to verify before-TTL uses cache and after-TTL triggers refresh in backend/tests/integration/cacheTtlRefresh.test.ts

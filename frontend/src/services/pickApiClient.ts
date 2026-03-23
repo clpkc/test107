@@ -15,6 +15,9 @@ export interface PickError {
 }
 
 export async function pickRestaurant(lat: number, lng: number, radius = 1000): Promise<PickResult> {
+  if (!Number.isFinite(lat) || !Number.isFinite(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    throw new Error("invalid_input:Invalid location or radius");
+  }
   const url = `/api/pick?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}&radius=${encodeURIComponent(radius)}`;
   const res = await fetch(url);
   if (!res.ok) {

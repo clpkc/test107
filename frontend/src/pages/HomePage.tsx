@@ -9,6 +9,7 @@ export function HomePage(): JSX.Element {
   const [manualLocation, setManualLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [result, setResult] = useState<PickResult | null>(null);
   const [error, setError] = useState<string>("");
+  const [retryable, setRetryable] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function resolveLocation(): Promise<{ lat: number; lng: number }> {
@@ -24,6 +25,7 @@ export function HomePage(): JSX.Element {
 
   async function onPick(): Promise<void> {
     setError("");
+    setRetryable(false);
     setLoading(true);
     try {
       const location = await resolveLocation();
@@ -36,12 +38,16 @@ export function HomePage(): JSX.Element {
         setError("Location denied. Enter a manual location.");
       } else if (message.startsWith("no_results:")) {
         setError("No restaurants found within 1000m. Please retry.");
+        setRetryable(true);
       } else if (message.startsWith("source_unavailable:") || message.startsWith("rate_limited:")) {
         setError("Source unavailable. Please retry.");
+        setRetryable(true);
       } else if (message.startsWith("parsing_failure:")) {
         setError("Unable to parse source data. Please retry.");
+        setRetryable(true);
       } else {
         setError("Unexpected error. Please retry.");
+        setRetryable(true);
       }
     } finally {
       setLoading(false);
@@ -61,6 +67,11 @@ export function HomePage(): JSX.Element {
       ) : null}
       <PickButton onClick={() => void onPick()} disabled={loading} />
       {error ? <p role="alert">{error}</p> : null}
+      {retryable ? (
+        <button type="button" onClick={() => void onPick()} disabled={loading}>
+          Retry
+        </button>
+      ) : null}
       <ResultCard result={result} />
     </main>
   );

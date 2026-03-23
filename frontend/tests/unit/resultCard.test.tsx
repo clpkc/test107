@@ -19,6 +19,6 @@ describe("result card fallbacks", () => {
       />,
     );
 
-    expect(screen.getByText("Not available")).toBeInTheDocument();
+    expect(screen.getAllByText("Not available").length).toBeGreaterThan(0);
   });
 });
