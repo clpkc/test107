@@ -1,0 +1,25 @@
+{
+  "name": "lunch-picker-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "echo 'lint not configured'"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "express": "^4.21.2",
+    "pino": "^9.6.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.10",
+    "supertest": "^7.0.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}
