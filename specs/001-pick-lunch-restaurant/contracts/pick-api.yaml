@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: Lunch Picker API
+  version: 1.0.0
+  description: API contract for selecting one nearby lunch restaurant.
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/pick:
+    get:
+      summary: Pick one nearby restaurant
+      description: Returns exactly one randomly selected restaurant within the given radius.
+      parameters:
+        - in: query
+          name: lat
+          required: true
+          schema:
+            type: number
+            format: double
+            minimum: -90
+            maximum: 90
+        - in: query
+          name: lng
+          required: true
+          schema:
+            type: number
+            format: double
+            minimum: -180
+            maximum: 180
+        - in: query
+          name: radius
+          required: false
+          schema:
+            type: integer
+            default: 1000
+            minimum: 1
+            maximum: 1000
+      responses:
+        '200':
+          description: Restaurant picked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PickResponse'
+        '400':
+          description: Invalid input (coordinates or radius).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No restaurants found within radius.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Request throttled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: Upstream source unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Parsing failure or temporary service error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    PickResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - address
+        - cuisine
+        - priceRange
+        - photos
+        - sourceUrl
+        - distanceMeters
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+        cuisine:
+          type: array
+          items:
+            type: string
+        priceRange:
+          type: string
+        photos:
+          type: array
+          items:
+            type: string
+            format: uri
+        sourceUrl:
+          type: string
+          format: uri
+        distanceMeters:
+          type: integer
+          minimum: 0
+          maximum: 1000
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - invalid_input
+            - no_results
+            - rate_limited
+            - source_unavailable
+            - parsing_failure
+        message:
+          type: string
