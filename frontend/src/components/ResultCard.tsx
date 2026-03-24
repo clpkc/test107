@@ -19,24 +19,29 @@ function buildOpenRiceUrl(result: PickResult): string {
     return result.sourceUrl;
   }
 
-  // Try to build search using restaurant name and address for better results
-  const searchParts: string[] = [];
-  if (result.name && result.name !== "Not available") {
-    searchParts.push(result.name);
-  }
-  if (result.address && result.address !== "Not available") {
-    const parts = result.address.split(",").map((p) => p.trim());
-    if (parts[0]) searchParts.push(parts[0]); // just street, not full address
-  }
+  const name = result.name && result.name !== "Not available" ? result.name.trim() : "";
+  const address = result.address && result.address !== "Not available"
+    ? result.address
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean)[0] || ""
+    : "";
 
-  const searchText = searchParts.join(" ");
-
-  if (!searchText) {
+  if (!name && !address) {
     return "https://www.openrice.com/en/hongkong/restaurants";
   }
 
-  // Encode as whatwhere param which searches across name and address fields
-  return `https://www.openrice.com/en/hongkong/restaurants?whatwhere=${encodeURIComponent(searchText)}`;
+  const url = new URL("https://www.openrice.com/en/hongkong/restaurants");
+
+  if (name && address) {
+    // Prefer separated query fields to avoid no-result cases when concatenated.
+    url.searchParams.set("what", name);
+    url.searchParams.set("where", address);
+    return url.toString();
+  }
+
+  url.searchParams.set("whatwhere", name || address);
+  return url.toString();
 }
 
 export function ResultCard({ result }: Props): JSX.Element {

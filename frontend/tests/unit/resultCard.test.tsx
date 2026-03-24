@@ -63,6 +63,29 @@ describe("result card fallbacks", () => {
     const link = screen.getByRole("link", { name: /View on OpenRice/i });
     const href = link.getAttribute("href");
     expect(href).toContain("openrice.com");
+    expect(href).toContain("restaurants?");
+    expect(href).toContain("what=");
+    expect(href).toContain("where=");
+  });
+
+  it("uses whatwhere when only one searchable field exists", () => {
+    render(
+      <ResultCard
+        result={{
+          id: "1",
+          name: "Only Name",
+          address: "Not available",
+          cuisine: ["Thai"],
+          priceRange: "$$",
+          photos: [],
+          sourceUrl: "https://www.openstreetmap.org/node/123",
+          distanceMeters: 500,
+        }}
+      />,
+    );
+
+    const link = screen.getByRole("link", { name: /View on OpenRice/i });
+    const href = link.getAttribute("href");
     expect(href).toContain("restaurants?whatwhere=");
   });
 });
