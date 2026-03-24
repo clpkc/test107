@@ -10,6 +10,11 @@ function fallback(value: string | undefined): string {
 }
 
 function buildOpenRiceUrl(result: PickResult): string {
+  // Use actual OpenRice restaurant page URL if available from OSM data
+  if (result.openriceUrl && result.openriceUrl.includes("openrice.com")) {
+    return result.openriceUrl;
+  }
+
   if (result.sourceUrl.includes("openrice.com")) {
     return result.sourceUrl;
   }

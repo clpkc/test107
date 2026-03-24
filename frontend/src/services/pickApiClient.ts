@@ -6,6 +6,7 @@ export interface PickResult {
   priceRange: string;
   photos: string[];
   sourceUrl: string;
+  openriceUrl?: string;
   distanceMeters: number;
 }
 

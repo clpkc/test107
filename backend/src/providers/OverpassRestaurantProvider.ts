@@ -78,6 +78,18 @@ export class OverpassRestaurantProvider implements RestaurantProvider {
         tags["disused:amenity"] === "restaurant" ||
         tags["disused"] === "yes";
 
+      // Extract OpenRice URL from OSM tags
+      let openriceUrl: string | undefined;
+      const website = tags["website"];
+      if (website && website.includes("openrice.com")) {
+        openriceUrl = website;
+      } else {
+        const contactWebsite = tags["contact:website"];
+        if (contactWebsite && contactWebsite.includes("openrice.com")) {
+          openriceUrl = contactWebsite;
+        }
+      }
+
       return {
         sourceUrl,
         canonicalId: `osm:${el.type}:${el.id}`,
@@ -89,6 +101,7 @@ export class OverpassRestaurantProvider implements RestaurantProvider {
         lat: elLat,
         lng: elLng,
         closed,
+        openriceUrl,
       };
     });
   }

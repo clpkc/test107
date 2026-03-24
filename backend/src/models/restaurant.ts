@@ -11,6 +11,7 @@ export interface RestaurantCandidate {
   lat?: number;
   lng?: number;
   closed?: boolean;
+  openriceUrl?: string;
 }
 
 export interface EligibleRestaurant extends RestaurantCandidate {
@@ -26,6 +27,7 @@ export interface PickResponse {
   priceRange: string;
   photos: string[];
   sourceUrl: string;
+  openriceUrl?: string;
   distanceMeters: number;
 }
 
@@ -56,6 +58,7 @@ export function withFallbacks(item: EligibleRestaurant): PickResponse {
     priceRange: item.priceRange?.trim() || "Not available",
     photos: item.photos && item.photos.length > 0 ? item.photos : [],
     sourceUrl: item.sourceUrl,
+    openriceUrl: item.openriceUrl,
     distanceMeters: item.distanceMeters,
   };
 }
