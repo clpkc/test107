@@ -9,10 +9,26 @@ function fallback(value: string | undefined): string {
   return value && value.trim() ? value : "Not available";
 }
 
+function buildOpenRiceUrl(result: PickResult): string {
+  if (result.sourceUrl.includes("openrice.com")) {
+    return result.sourceUrl;
+  }
+
+  const searchText = [result.name, result.address]
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(" ");
+
+  if (!searchText) {
+    return "https://www.openrice.com/en/hongkong/restaurants";
+  }
+
+  return `https://www.openrice.com/en/hongkong/restaurants?whatwhere=${encodeURIComponent(searchText)}`;
+}
+
 export function ResultCard({ result }: Props): JSX.Element {
   if (!result) return <section aria-label="result-card">No selection yet.</section>;
-
-  const photos = result.photos && result.photos.length > 0 ? result.photos : [];
+  const openRiceUrl = buildOpenRiceUrl(result);
 
   return (
     <section aria-label="result-card">
@@ -22,8 +38,8 @@ export function ResultCard({ result }: Props): JSX.Element {
       <p><strong>Price Range:</strong> {fallback(result.priceRange)}</p>
       <p><strong>Distance:</strong> {result.distanceMeters}m</p>
       <p>
-        <strong>Photos:</strong>{" "}
-        {photos.length > 0 ? photos.map((photo) => <a key={photo} href={photo}>Photo</a>) : "Not available"}
+        <strong>OpenRice:</strong>{" "}
+        <a href={openRiceUrl} target="_blank" rel="noreferrer">View on OpenRice</a>
       </p>
     </section>
   );

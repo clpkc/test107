@@ -17,8 +17,9 @@ export function createApp(): express.Express {
 if (process.env.NODE_ENV !== "test") {
   const app = createApp();
   const port = Number(process.env.PORT || 3000);
-  app.listen(port, () => {
+  const host = process.env.HOST || "0.0.0.0";
+  app.listen(port, host, () => {
     // eslint-disable-next-line no-console
-    console.log(`Backend listening on port ${port}`);
+    console.log(`Backend listening on ${host}:${port}`);
   });
 }
