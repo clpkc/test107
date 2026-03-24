@@ -53,7 +53,6 @@ export function ResultCard({ result }: Props): JSX.Element {
       <h2>{fallback(result.name)}</h2>
       <p><strong>Address:</strong> {fallback(result.address)}</p>
       <p><strong>Cuisine:</strong> {result.cuisine.length > 0 ? result.cuisine.join(", ") : "Not available"}</p>
-      <p><strong>Price Range:</strong> {fallback(result.priceRange)}</p>
       <p><strong>Distance:</strong> {result.distanceMeters}m</p>
       <p>
         <strong>OpenRice:</strong>{" "}
