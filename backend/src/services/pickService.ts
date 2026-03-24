@@ -5,6 +5,7 @@ import { dedupeCandidates } from "./dedupeService";
 import { filterByRadius } from "./distanceService";
 import { pickUniform, type RandomFn } from "./randomService";
 import { reverseGeocodeAddress, type ReverseGeocodeFn } from "./reverseGeocodeService";
+import type { RestaurantMetadataEnricher } from "./restaurantMetadataEnricher";
 
 export class PickError extends Error {
   constructor(public readonly code: "no_results" | "source_unavailable" | "parsing_failure" | "rate_limited", message: string) {
@@ -22,6 +23,7 @@ export class PickService {
       }
       return reverseGeocodeAddress(lat, lng);
     },
+    private readonly metadataEnricher?: RestaurantMetadataEnricher,
   ) {}
 
   async pick(request: PickRequest): Promise<PickResponse> {
@@ -48,6 +50,17 @@ export class PickService {
     const selected = pickUniform(eligible, this.rng);
     if (!selected) {
       throw new PickError("no_results", "No restaurants found within radius");
+    }
+
+    if (this.metadataEnricher) {
+      try {
+        const enriched = await this.metadataEnricher.enrich(selected, { ...request, perClickCap: 3 });
+        selected.address = enriched.address || selected.address;
+        selected.cuisine = enriched.cuisine && enriched.cuisine.length > 0 ? enriched.cuisine : selected.cuisine;
+        selected.priceRange = enriched.priceRange || selected.priceRange;
+      } catch {
+        // Ignore metadata enrichment failures and preserve the selected candidate.
+      }
     }
 
     if ((!selected.address || !selected.address.trim()) && Number.isFinite(selected.lat) && Number.isFinite(selected.lng)) {

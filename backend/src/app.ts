@@ -2,11 +2,16 @@ import express from "express";
 import { createApiRouter } from "./api/router";
 import { PickService } from "./services/pickService";
 import { OverpassRestaurantProvider } from "./providers/OverpassRestaurantProvider";
+import { GooglePlacesMetadataEnricher } from "./services/googlePlacesMetadataEnricher";
 
 export function createApp(): express.Express {
   const app = express();
   const provider = new OverpassRestaurantProvider();
-  const pickService = new PickService(provider);
+  const googleApiKey = process.env.GOOGLE_MAPS_API_KEY;
+  const metadataEnricher = googleApiKey
+    ? new GooglePlacesMetadataEnricher({ apiKey: googleApiKey })
+    : undefined;
+  const pickService = new PickService(provider, Math.random, undefined, metadataEnricher);
 
   app.use(express.json());
   app.use("/api", createApiRouter(pickService));
