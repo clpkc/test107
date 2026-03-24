@@ -1,11 +1,11 @@
 import express from "express";
 import { createApiRouter } from "./api/router";
 import { PickService } from "./services/pickService";
-import { OpenRiceRestaurantProvider } from "./providers/OpenRiceRestaurantProvider";
+import { OverpassRestaurantProvider } from "./providers/OverpassRestaurantProvider";
 
 export function createApp(): express.Express {
   const app = express();
-  const provider = new OpenRiceRestaurantProvider({ baseUrl: "https://www.openrice.com" });
+  const provider = new OverpassRestaurantProvider();
   const pickService = new PickService(provider);
 
   app.use(express.json());
