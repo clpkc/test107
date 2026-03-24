@@ -8,12 +8,11 @@ vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({
 }), { status: 200 })));
 
 describe("location fallback", () => {
-  it("shows error when lat/lng not provided before picking", async () => {
+  it("uses default coordinates to pick successfully", async () => {
     render(<HomePage />);
-    // Click pick without filling coordinates
     fireEvent.click(screen.getByRole("button", { name: "Pick a Restaurant" }));
     await waitFor(() =>
-      expect(screen.getByRole("alert").textContent).toMatch(/latitude and longitude/i),
+      expect(screen.getByRole("heading", { level: 2 }).textContent).toBe("A"),
     );
   });
 });

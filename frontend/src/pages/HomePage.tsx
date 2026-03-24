@@ -3,9 +3,12 @@ import { PickButton } from "../components/PickButton";
 import { ResultCard } from "../components/ResultCard";
 import { pickRestaurant, type PickResult } from "../services/pickApiClient";
 
+const DEFAULT_LAT = "22.3091527";
+const DEFAULT_LNG = "114.1919380";
+
 export function HomePage(): JSX.Element {
-  const [lat, setLat] = useState("");
-  const [lng, setLng] = useState("");
+  const [lat, setLat] = useState(DEFAULT_LAT);
+  const [lng, setLng] = useState(DEFAULT_LNG);
   const [result, setResult] = useState<PickResult | null>(null);
   const [error, setError] = useState<string>("");
   const [retryable, setRetryable] = useState(false);
@@ -51,8 +54,8 @@ export function HomePage(): JSX.Element {
       <h1>Lunch Picker</h1>
 
       <p style={{ color: "#555", marginBottom: "0.5rem" }}>
-        Enter your coordinates below, then press <strong>Pick a Restaurant</strong>.
-        (Try: lat <code>22.3025</code>, lng <code>114.1737</code> for Tsim Sha Tsui, HK)
+        Using default location for 8 Laguna Verde Ave, Hung Hom, Hong Kong.
+        You can edit the coordinates below, then press <strong>Pick a Restaurant</strong>.
       </p>
 
       <div style={{ marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
