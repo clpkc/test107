@@ -18,9 +18,11 @@ export function HomePage(): JSX.Element {
     const numLat = Number(lat);
     const numLng = Number(lng);
     if (!lat || !lng || isNaN(numLat) || isNaN(numLng)) {
+      setResult(null);
       setError("Please enter latitude and longitude first.");
       return;
     }
+    setResult(null);
     setError("");
     setRetryable(false);
     setLoading(true);
@@ -28,6 +30,7 @@ export function HomePage(): JSX.Element {
       const picked = await pickRestaurant(numLat, numLng, 1000);
       setResult(picked);
     } catch (err) {
+      setResult(null);
       const message = String((err as Error).message || "");
       if (message.startsWith("no_results:")) {
         setError("No restaurants found within 1000m of those coordinates.");
