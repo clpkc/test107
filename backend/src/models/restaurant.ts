@@ -27,7 +27,7 @@ export interface PickResponse {
   priceRange: string;
   photos: string[];
   sourceUrl: string;
-  openriceUrl?: string;
+  openriceUrl: string | null;
   distanceMeters: number;
 }
 
@@ -58,7 +58,7 @@ export function withFallbacks(item: EligibleRestaurant): PickResponse {
     priceRange: item.priceRange?.trim() || "Not available",
     photos: item.photos && item.photos.length > 0 ? item.photos : [],
     sourceUrl: item.sourceUrl,
-    openriceUrl: item.openriceUrl,
+    openriceUrl: item.openriceUrl || null,
     distanceMeters: item.distanceMeters,
   };
 }

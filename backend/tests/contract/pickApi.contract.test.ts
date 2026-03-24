@@ -35,6 +35,7 @@ describe("pick API contract", () => {
         priceRange: expect.any(String),
         photos: expect.any(Array),
         sourceUrl: expect.any(String),
+        openriceUrl: expect.any([String, null]),
         distanceMeters: expect.any(Number),
       }),
     );
