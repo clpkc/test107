@@ -54,6 +54,7 @@ export class OverpassRestaurantProvider implements RestaurantProvider {
       const tags = el.tags ?? {};
       const elLat = el.lat ?? el.center?.lat;
       const elLng = el.lon ?? el.center?.lon;
+      const name = tags["name"] || tags["name:en"] || undefined;
 
       // Build an OpenStreetMap link as the canonical URL
       const sourceUrl = `https://www.openstreetmap.org/${el.type}/${el.id}`;
@@ -70,16 +71,24 @@ export class OverpassRestaurantProvider implements RestaurantProvider {
         .filter(Boolean)
         .join(" ") || tags["addr:full"] || undefined;
 
+      // Detect if restaurant is closed
+      const closed =
+        name?.includes("(Closed)") ||
+        name?.includes("Closed") ||
+        tags["disused:amenity"] === "restaurant" ||
+        tags["disused"] === "yes";
+
       return {
         sourceUrl,
         canonicalId: `osm:${el.type}:${el.id}`,
-        name: tags["name"] || tags["name:en"] || undefined,
+        name,
         address,
         cuisine,
         priceRange: undefined,
         photos: [],
         lat: elLat,
         lng: elLng,
+        closed,
       };
     });
   }

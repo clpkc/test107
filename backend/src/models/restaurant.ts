@@ -10,6 +10,7 @@ export interface RestaurantCandidate {
   photos?: string[];
   lat?: number;
   lng?: number;
+  closed?: boolean;
 }
 
 export interface EligibleRestaurant extends RestaurantCandidate {

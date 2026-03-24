@@ -33,7 +33,8 @@ export class PickService {
     }
 
     const deduped = dedupeCandidates(candidates);
-    const eligible = filterByRadius(request.lat, request.lng, request.radius, deduped);
+    const notClosed = deduped.filter((c) => !c.closed);
+    const eligible = filterByRadius(request.lat, request.lng, request.radius, notClosed);
     const selected = pickUniform(eligible, this.rng);
     if (!selected) {
       throw new PickError("no_results", "No restaurants found within radius");
