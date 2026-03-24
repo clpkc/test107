@@ -57,7 +57,7 @@ export function HomePage(): JSX.Element {
       <h1>Lunch Picker</h1>
 
       <p style={{ color: "#555", marginBottom: "0.5rem" }}>
-        Using default location for 8 Laguna Verde Ave, Hung Hom, Hong Kong.
+        Using default location for <strong>8 Laguna Verde Ave, Hung Hom, Hong Kong</strong>.
         You can edit the coordinates below, then press <strong>Pick a Restaurant</strong>.
       </p>
 
