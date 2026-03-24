@@ -2,19 +2,18 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { HomePage } from "../../src/pages/HomePage";
 
-describe("location fallback", () => {
-  it("shows error message when auto-detect fails", async () => {
-    vi.stubGlobal("navigator", {
-      geolocation: {
-        getCurrentPosition: (_ok: unknown, fail: (e: { message: string }) => void) =>
-          fail({ message: "User denied Geolocation" }),
-      },
-    });
+vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({
+  id: "1", name: "A", address: "B", cuisine: ["Cafe"],
+  priceRange: "$101-200", photos: [], sourceUrl: "https://osm.org/node/1", distanceMeters: 10,
+}), { status: 200 })));
 
+describe("location fallback", () => {
+  it("shows error when lat/lng not provided before picking", async () => {
     render(<HomePage />);
-    fireEvent.click(screen.getByRole("button", { name: "Auto-detect" }));
+    // Click pick without filling coordinates
+    fireEvent.click(screen.getByRole("button", { name: "Pick a Restaurant" }));
     await waitFor(() =>
-      expect(screen.getByRole("alert").textContent).toMatch(/auto-detect/i),
+      expect(screen.getByRole("alert").textContent).toMatch(/latitude and longitude/i),
     );
   });
 });
