@@ -61,6 +61,14 @@ export function HomePage(): JSX.Element {
         You can edit the coordinates below, then press <strong>Pick a Restaurant</strong>.
       </p>
 
+      <p style={{ color: "#555", marginTop: 0, marginBottom: "0.75rem" }}>
+        Need coordinates? Open {" "}
+        <a href="https://www.google.com/maps" target="_blank" rel="noreferrer">
+          Google Maps
+        </a>{" "}
+        and search your place, then copy the latitude/longitude.
+      </p>
+
       <div style={{ marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
         <label>
           Latitude
