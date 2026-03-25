@@ -3,12 +3,15 @@ import { PickButton } from "../components/PickButton";
 import { ResultCard } from "../components/ResultCard";
 import { pickRestaurant, type PickResult } from "../services/pickApiClient";
 
-const DEFAULT_LAT = "22.3091527";
-const DEFAULT_LNG = "114.1919380";
+const OFFICES = [
+  { label: "Hung Hom Office", address: "8 Laguna Verde Ave, Hung Hom, Hong Kong", lat: "22.3091527", lng: "114.1919380" },
+  { label: "Kai Tak Office",  address: "43 Shing Kai Road, Kai Tak, Kowloon, Hong Kong", lat: "22.3344", lng: "114.2045" },
+] as const;
 
 export function HomePage(): JSX.Element {
-  const [lat, setLat] = useState(DEFAULT_LAT);
-  const [lng, setLng] = useState(DEFAULT_LNG);
+  const [selectedOffice, setSelectedOffice] = useState<string>(OFFICES[0].label);
+  const [lat, setLat] = useState(OFFICES[0].lat);
+  const [lng, setLng] = useState(OFFICES[0].lng);
   const [result, setResult] = useState<PickResult | null>(null);
   const [error, setError] = useState<string>("");
   const [retryable, setRetryable] = useState(false);
