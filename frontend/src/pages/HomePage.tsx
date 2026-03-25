@@ -60,12 +60,36 @@ export function HomePage(): JSX.Element {
       <h1>Lunch Picker</h1>
 
       <p style={{ color: "#555", marginBottom: "0.5rem" }}>
-        Using default location for <strong>8 Laguna Verde Ave, Hung Hom, Hong Kong</strong>.
-        You can edit the coordinates below, then press <strong>Pick a Restaurant</strong>.
+        Select your office or enter custom coordinates below, then press <strong>Pick a Restaurant</strong>.
       </p>
 
+      <div style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+        {OFFICES.map((office) => (
+          <button
+            key={office.label}
+            aria-label={office.label}
+            onClick={() => {
+              setSelectedOffice(office.label);
+              setLat(office.lat);
+              setLng(office.lng);
+            }}
+            style={{
+              padding: "0.4rem 0.9rem",
+              border: "2px solid #0078d4",
+              borderRadius: 6,
+              cursor: "pointer",
+              background: selectedOffice === office.label ? "#0078d4" : "#fff",
+              color: selectedOffice === office.label ? "#fff" : "#0078d4",
+              fontWeight: 600,
+            }}
+          >
+            {office.label}
+          </button>
+        ))}
+      </div>
+
       <p style={{ color: "#555", marginTop: 0, marginBottom: "0.75rem" }}>
-        Need coordinates? Open {" "}
+        Need coordinates for a custom location? Open{" "}
         <a href="https://www.google.com/maps" target="_blank" rel="noreferrer">
           Google Maps
         </a>{" "}
@@ -78,7 +102,7 @@ export function HomePage(): JSX.Element {
           <input
             style={{ marginLeft: "0.25rem", width: 130 }}
             value={lat}
-            onChange={(e) => setLat(e.target.value)}
+            onChange={(e) => { setSelectedOffice(""); setLat(e.target.value); }}
             placeholder="e.g. 22.3025"
             aria-label="latitude"
           />
@@ -88,7 +112,7 @@ export function HomePage(): JSX.Element {
           <input
             style={{ marginLeft: "0.25rem", width: 130 }}
             value={lng}
-            onChange={(e) => setLng(e.target.value)}
+            onChange={(e) => { setSelectedOffice(""); setLng(e.target.value); }}
             placeholder="e.g. 114.1737"
             aria-label="longitude"
           />
