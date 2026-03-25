@@ -1,5 +1,6 @@
 import type { RestaurantCandidate } from "../models/restaurant";
 import type { ProviderContext, RestaurantProvider } from "./RestaurantProvider";
+import { retryWithBackoff } from "../services/retryService";
 
 interface OverpassElement {
   type: "node" | "way" | "relation";
@@ -15,14 +16,22 @@ interface OverpassResponse {
 }
 
 export class OverpassRestaurantProvider implements RestaurantProvider {
-  private readonly apiUrl: string;
+  private readonly apiUrls: string[];
   private readonly fetcher: (url: string, opts?: RequestInit) => Promise<Response>;
 
   constructor(opts?: {
     apiUrl?: string;
+    apiUrls?: string[];
     fetcher?: (url: string, opts?: RequestInit) => Promise<Response>;
   }) {
-    this.apiUrl = opts?.apiUrl ?? "https://overpass-api.de/api/interpreter";
+    this.apiUrls = (opts?.apiUrls && opts.apiUrls.length > 0
+      ? opts.apiUrls
+      : opts?.apiUrl
+        ? [opts.apiUrl]
+        : [
+            "https://overpass-api.de/api/interpreter",
+            "https://overpass.private.coffee/api/interpreter",
+          ]).map((url) => url.trim()).filter(Boolean);
     this.fetcher = opts?.fetcher ?? ((url, o) => fetch(url, o));
   }
 
@@ -38,17 +47,7 @@ export class OverpassRestaurantProvider implements RestaurantProvider {
       "out center tags;",
     ].join("\n");
 
-    const response = await this.fetcher(this.apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `data=${encodeURIComponent(query)}`,
-    });
-
-    if (!response.ok) {
-      throw new Error(`overpass_http_${response.status}`);
-    }
-
-    const data = (await response.json()) as OverpassResponse;
+    const data = await this.fetchFromAvailableEndpoint(query);
 
     return data.elements.map((el): RestaurantCandidate => {
       const tags = el.tags ?? {};
@@ -104,5 +103,52 @@ export class OverpassRestaurantProvider implements RestaurantProvider {
         openriceUrl,
       };
     });
+  }
+
+  private async fetchFromAvailableEndpoint(query: string): Promise<OverpassResponse> {
+    let lastError: unknown;
+
+    for (const apiUrl of this.apiUrls) {
+      try {
+        return await retryWithBackoff(
+          async () => {
+            const response = await this.fetcher(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: `data=${encodeURIComponent(query)}`,
+            });
+
+            if (!response.ok) {
+              throw new Error(`overpass_http_${response.status}`);
+            }
+
+            return (await response.json()) as OverpassResponse;
+          },
+          {
+            maxRetries: 2,
+            shouldRetry: (error) => this.isTransientError(error),
+          },
+        );
+      } catch (error) {
+        lastError = error;
+        if (!this.isTransientError(error)) {
+          throw error;
+        }
+      }
+    }
+
+    throw lastError ?? new Error("overpass_unavailable");
+  }
+
+  private isTransientError(error: unknown): boolean {
+    const message = String((error as Error)?.message || "").toLowerCase();
+    return (
+      message === "typeerror: fetch failed" ||
+      message.includes("fetch failed") ||
+      message.includes("timeout") ||
+      message.includes("network") ||
+      message.startsWith("overpass_http_429") ||
+      message.startsWith("overpass_http_5")
+    );
   }
 }
